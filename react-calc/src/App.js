@@ -11,40 +11,76 @@ class App extends Component {
 		this.state = { input: '', currentOperand: '', onAnswer: '' }
 	}
 
-	addToInput = (val) => {
-		console.log(isNaN('.'))
-		console.log(val)
-		console.log(this.state.input)
-		console.log(this.state.input[this.state.input.length - 1])
-		console.log('val.' + this.state.input)
-		console.log(this.state.currentOperand)
+	appendInput = val => this.setState({ input: this.state.input + val })
+
+	appendCO = val =>
+		this.setState({ currentOperand: this.state.currentOperand + val })
+
+	setInput = val => this.setState({ input: val })
+
+	setCO = val => this.setState({ currentOperand: val })
+
+	clearAnswer = () => {
 		this.setState({ onAnswer: '' })
+	}
+
+	clearCO = () => {
+		this.setState({ onAnswer: '' })
+	}
+
+	clearInput = () => {
+		this.setState({ input: '' })
+	}
+	addToInput = (val) => {
+		// console.log(isNaN('.'))
+		// console.log(val)
+		// console.log(this.state.input)
+		// console.log(this.state.input[this.state.input.length - 1])
+		// console.log('val.' + this.state.input)
+		// console.log(this.state.currentOperand)
+
+		// const append = (i) => {
+		// 	this.setState({ i: i + val })
+		// }
+		// const removeLast = (i) =>
+		// 	this.setState({ i: i.slice(0, this.state.i.length - 1) })
+		// const calculate = (i) => this.setState({ i: math.evaluate(i) })
+		// const remove = (i) => this.setState({ i: '' })
+		// const removeCo = (i) =>
+		// 	this.setState({
+		// 		i: i.slice(0, this.state.i - this.state.currentOperand.length),
+		// 	})
+		// const replace = (i) => this.setState({ i: val })
+
 		if (isNaN(val)) {
+      console.log('val is' + val)
+      console.log('CO is' + this.state.currentOperand)
+      console.log('input is' + this.state.input)
 			if (val === '.') {
-				if (this.state.currentOperand.includes(val)) {
+				if (!this.state.currentOperand) {
+          return 
+        } else if (!this.state.currentOperand.includes(val)) {
+						this.appendInput(val)
+						this.appendCO(val)
+						this.clearAnswer()
+					}
+				 else {
 					return
-				} else {
-					console.log(val + 'isval')
-					console.log(this.state.input)
-					this.setState({
-						input: this.state.input + val,
-						currentOperand: this.state.currentOperand + val,
-						onAnswer: '',
-					})
 				}
 			} else if (val === '-') {
-				if (
-					this.state.currentOperand.includes(val) ||
-					this.state.currentOperand === '.'
-				) {
-					return
-				} else {
-					this.setState({
-						input: this.state.input + val,
-						currentOperand: this.state.currentOperand + val,
-						onAnswer: '',
-					})
-				}
+        if (this.state.currentOperand) {
+          if (
+            this.state.currentOperand.includes(val) ||
+            this.state.currentOperand === '.'
+            ) {
+            console.log(this.state.currentOperand)
+            return
+          } else {
+            this.appendInput(val)
+            this.appendCO(val)
+            this.clearAnswer()
+          } 
+        }
 			} else if (
 				this.state.input.length === 0 ||
 				this.state.currentOperand === '.' ||
@@ -57,63 +93,50 @@ class App extends Component {
 				'.' !== this.state.input[this.state.input.length - 1]
 			) {
 				let newinput = this.state.input.slice(0, this.state.input.length - 1)
-				this.setState({
-					input: newinput + val,
-					currentOperand: '',
-					onAnswer: '',
-				})
+				this.setState({ input: newinput + val })
+				this.clearAnswer()
+				this.clearCO()
 			} else {
-				this.setState({ input: this.state.input + val, currentOperand: '' })
+				this.appendInput(val)
+				this.clearCO()
 			}
+		} else if (this.state.onAnswer) {
+			this.setInput(val)
+			this.setCO(val)
 		} else {
-			if (this.state.onAnswer) {
-				this.setState({ input: val, currentOperand: val })
-			} else {
-				this.setState({
-					input: this.state.input + val,
-					currentOperand: this.state.currentOperand + val,
-				})
-			}
+			this.appendInput(val)
+			this.appendCO(val)
 		}
 	}
 	handleEqual = () => {
-		this.setState({ onAnswer: true })
-		if (isNaN(this.state.input[this.state.input.length - 1])) {
+		if (
+			isNaN(this.state.input[this.state.input.length - 1]) &&
+			this.state.input[this.state.input.length - 1] != '.'
+		) {
 			return
 		} else {
-			console.log(math.evaluate(this.state.input))
-			console.log(isNaN(math.evaluate(this.state.input)))
 			this.setState({
 				input: math.evaluate(this.state.input),
 				currentOperand: math.evaluate(this.state.input),
+				onAnswer: 'True',
 			})
 		}
 	}
 
 	handleClear = () => {
-		console.log('handleclear')
-    console.log(this.state.input)
-    console.log(this.state.currentOperand)
 		if (this.state.onAnswer) {
-      this.setState({ input: "", currentOperand: ""})
-    } else if (isNaN(this.state.input[this.state.input.length - 1])) {
-			this.setState({
-				input: this.state.input.slice(0, this.state.input.length - 1),
-				currentOperand: '',
-			})
+			this.clearInput()
+			this.clearCO()
+		} else if (isNaN(this.state.input[this.state.input.length - 1])) {
+			this.setState({ input: this.state.input.slice(0, this.state.input.length - 1) })
+      this.clearCO()
 		} else if (this.state.currentOperand) {
-			this.setState({
-				input: this.state.input.slice(
-					0,
-					this.state.input.length - this.state.currentOperand.length
-				),
-				currentOperand: '',
+			this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.currentOperand.length),
 			})
+      this.clearCO()
 		} else {
-			this.setState({
-				input: '',
-				currentOperand: '',
-			})
+			this.clearCO()
+      this.clearInput()
 		}
 	}
 
@@ -147,7 +170,9 @@ class App extends Component {
 						<Button handleClick={this.addToInput}>-</Button>
 					</div>
 					<div className='row'>
-						<ClearButton handleClick={() => this.handleClear()}>Clear</ClearButton>
+						<ClearButton handleClick={() => this.handleClear()}>
+							Clear
+						</ClearButton>
 					</div>
 				</div>
 			</div>
