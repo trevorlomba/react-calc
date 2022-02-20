@@ -8,136 +8,255 @@ import * as math from 'mathjs'
 class App extends Component {
 	constructor(props) {
 		super(props)
-		this.state = { input: '', currentOperand: '', onAnswer: '' }
+		this.state = { input: '', inputType: 'empty', COLength: 0 }
 	}
 
-	appendInput = val => this.setState({ input: this.state.input + val })
-
-	appendCO = val =>
-		this.setState({ currentOperand: this.state.currentOperand + val })
-
+	appendInput = val => {this.setState({ input: this.state.input + val , COLength: this.state.COLength+1  })}
+  updateInputType = type => this.setState({ inputType: type})
+  clearCOLength = (inc=0) => this.setState({ COLength: 0+inc})
 	setInput = val => this.setState({ input: val })
 
-	setCO = val => this.setState({ currentOperand: val })
-
-	clearAnswer = () => {
-		this.setState({ onAnswer: '' })
-	}
-
-	clearCO = () => {
-		this.setState({ onAnswer: '' })
-	}
-
-	clearInput = () => {
-		this.setState({ input: '' })
-	}
 	addToInput = (val) => {
-		// console.log(isNaN('.'))
-		// console.log(val)
-		// console.log(this.state.input)
-		// console.log(this.state.input[this.state.input.length - 1])
-		// console.log('val.' + this.state.input)
-		// console.log(this.state.currentOperand)
-
-		// const append = (i) => {
-		// 	this.setState({ i: i + val })
-		// }
-		// const removeLast = (i) =>
-		// 	this.setState({ i: i.slice(0, this.state.i.length - 1) })
-		// const calculate = (i) => this.setState({ i: math.evaluate(i) })
-		// const remove = (i) => this.setState({ i: '' })
-		// const removeCo = (i) =>
-		// 	this.setState({
-		// 		i: i.slice(0, this.state.i - this.state.currentOperand.length),
-		// 	})
-		// const replace = (i) => this.setState({ i: val })
-
+	
+    console.log(this.state.COLength)
 		if (isNaN(val)) {
-      console.log('val is' + val)
-      console.log('CO is' + this.state.currentOperand)
-      console.log('input is' + this.state.input)
 			if (val === '.') {
-				if (!this.state.currentOperand) {
-          return 
-        } else if (!this.state.currentOperand.includes(val)) {
+				switch (this.state.inputType) {
+					case 'decimal':
+						console.log('decimal')
+						break
+					case 'COFloat':
+						console.log('COFloat')
+						break
+					case 'CO':
 						this.appendInput(val)
-						this.appendCO(val)
-						this.clearAnswer()
-					}
-				 else {
-					return
+            this.updateInputType('COFloat')
+						break
+					case 'empty':
+						this.appendInput(val)
+            this.updateInputType('CO')
+						break
+					case 'minus':
+						this.appendInput(val)
+						this.updateInputType('decimal')
+						break
+					case 'operator':
+						this.appendInput(val)
+            this.updateInputType('decimal')
+            break
+					case 'answer':
+						this.setInput(val)
+            this.updateInputType('decimal')
+            break
+					default:
+						console.log('error')
 				}
-			} else if (val === '-') {
-        if (this.state.currentOperand) {
-          if (
-            this.state.currentOperand.includes(val) ||
-            this.state.currentOperand === '.'
-            ) {
-            console.log(this.state.currentOperand)
-            return
-          } else {
-            this.appendInput(val)
-            this.appendCO(val)
-            this.clearAnswer()
-          } 
-        }
-			} else if (
-				this.state.input.length === 0 ||
-				this.state.currentOperand === '.' ||
-				this.state.currentOperand === '-'
-			) {
-				return
-			} else if (
-				this.state.input.length > 1 &&
-				isNaN(this.state.input[this.state.input.length - 1]) &&
-				'.' !== this.state.input[this.state.input.length - 1]
-			) {
-				let newinput = this.state.input.slice(0, this.state.input.length - 1)
-				this.setState({ input: newinput + val })
-				this.clearAnswer()
-				this.clearCO()
-			} else {
-				this.appendInput(val)
-				this.clearCO()
 			}
-		} else if (this.state.onAnswer) {
-			this.setInput(val)
-			this.setCO(val)
+			else if (val === '-') {
+				switch (this.state.inputType) {
+					case 'decimal':
+						console.log('minus')
+						break
+          case 'minus':
+            console.log('minus')
+            break
+					case 'COFloat':
+						console.log('COFloat')
+						this.appendInput(val)
+            this.updateInputType('minus')
+            this.clearCOLength(1)
+            break
+					case 'CO':
+						console.log('CO')
+						this.appendInput(val)
+						this.updateInputType('minus')
+            this.clearCOLength(1)
+            break
+					case 'empty':
+						console.log('empty')
+						this.appendInput(val)
+						this.updateInputType('minus')
+            this.clearCOLength(1)
+            break
+					case 'operator':
+						console.log('operator')
+						this.appendInput(val)
+						this.updateInputType('minus')
+            break
+					case 'answer':
+						this.appendInput(val)
+						this.updateInputType('operator')
+						break
+					default:
+						console.log('error')
+				}
+			} else {
+        
+				switch (this.state.inputType) {
+					case 'empty':
+						console.log('empty')
+						break
+					case 'decimal':
+						console.log('decimal')
+						break
+					case 'COFloat':
+						console.log('COFloat')
+            this.appendInput(val)
+						this.updateInputType('operator')
+            this.clearCOLength(1)
+						break
+					case 'CO':
+						console.log('CO')
+            this.appendInput(val)
+						this.updateInputType('operator')
+            this.clearCOLength(1)
+						break
+					case 'minus':
+						console.log('minus')
+            let newinput = this.state.input.slice(0, this.state.input.length - 1)
+				    this.setState({ input: newinput + val })  
+            this.clearCOLength(1)
+						break
+					case 'operator':
+						console.log('operator')
+            let newerinput = this.state.input.slice(0, this.state.input.length - 1)
+				    this.setState({ input: newerinput + val })  
+            this.clearCOLength(1)
+						break
+					case 'answer':
+						this.appendInput(val)
+						this.updateInputType('operator')
+            this.clearCOLength(1)
+						break
+					default:
+						console.log('error')
+				}
+			}
 		} else {
-			this.appendInput(val)
-			this.appendCO(val)
+			switch (this.state.inputType) {
+				case 'decimal':
+					console.log('decimal')
+          this.appendInput(val)
+					this.updateInputType('CO')
+					break
+				case 'COFloat':
+					console.log('COFloat')
+          this.appendInput(val)
+					this.updateInputType('COFloat')
+					break
+				case 'CO':
+					console.log('CO')
+          this.appendInput(val)
+					this.updateInputType('CO')
+					break
+				case 'empty':
+					console.log('empty')
+          this.appendInput(val)
+					this.updateInputType('CO')
+					break
+				case 'minus':
+					console.log('minus')
+          this.appendInput(val)
+					this.updateInputType('CO')
+					break
+				case 'operator':
+					console.log('operator')
+          this.appendInput(val)
+						this.updateInputType('CO')
+					break
+				case 'answer':
+					this.setInput(val)
+					this.updateInputType('CO')
+					break
+				default:
+					console.log('error')
+			}
 		}
-	}
+  }
+  
 	handleEqual = () => {
-		if (
-			isNaN(this.state.input[this.state.input.length - 1]) &&
-			this.state.input[this.state.input.length - 1] != '.'
-		) {
-			return
-		} else {
+    switch(this.state.inputType) {
+    case 'decimal':
+					console.log('decimal')
+					break
+    case 'minus':
+      console.log('minus')
+      break
+    case 'operator':
+      console.log('operator')
+      break
+		default:
 			this.setState({
-				input: math.evaluate(this.state.input),
-				currentOperand: math.evaluate(this.state.input),
-				onAnswer: 'True',
+				input: ''+math.evaluate(this.state.input),
 			})
-		}
+      this.updateInputType('answer')
+      this.clearCOLength()
+			}
+		
 	}
 
 	handleClear = () => {
-		if (this.state.onAnswer) {
-			this.clearInput()
-			this.clearCO()
-		} else if (isNaN(this.state.input[this.state.input.length - 1])) {
-			this.setState({ input: this.state.input.slice(0, this.state.input.length - 1) })
-      this.clearCO()
-		} else if (this.state.currentOperand) {
-			this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.currentOperand.length),
+    if (this.state.COLength === 1) {
+      this.setState({ input: this.state.input.slice(0, this.state.input.length - 1) })
+    } else if (this.state.COLength > 1) 
+    { switch (this.state.inputType) {
+      case 'answer':
+        this.setInput('')
+        this.updateInputType('answer')
+        this.clearCOLength()
+        break
+			case 'decimal':
+				console.log('decimal')
+				this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
 			})
-      this.clearCO()
+				this.updateInputType('empty')
+        this.clearCOLength()
+				break
+			case 'COFloat':
+				console.log('COFloat')
+				this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
+			})
+				this.updateInputType('empty')
+        this.clearCOLength()
+				break
+			case 'CO':
+				console.log('CO')
+				this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
+			})
+				this.updateInputType('empty')
+        this.clearCOLength()
+				break
+			case 'minus':
+				console.log('minus')
+				this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
+			})
+				this.updateInputType('empty')
+        this.clearCOLength()
+				break
+			case 'operator':
+				console.log('operator')
+				this.setState({ input: this.state.input.slice(0, this.state.input.length - 1) })
+				this.updateInputType('empty')
+				break
+			default:
+				console.log('error') }
 		} else {
-			this.clearCO()
-      this.clearInput()
-		}
+      this.setInput('')
+    }
+      // if (this.state.onAnswer) {
+      //   this.clearInput()
+      //   this.clearCO()
+      // } else if (isNaN(this.state.input[this.state.input.length - 1])) {
+        
+      // } else if (this.state.currentOperand) {
+      //   this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
+      //   })
+      //   this.clearCO()
+      // } else {
+      //   this.clearCO()
+      //   this.clearInput()
+      // }
+      // if (this.state.COLength === 0) { this.setState({ inputType: 'empty'} )}
 	}
 
 	render() {
