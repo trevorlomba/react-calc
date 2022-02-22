@@ -3,381 +3,229 @@ import './App.css'
 import { Button } from './components/Button'
 import { Input } from './components/Input'
 import { ClearButton } from './components/ClearButton'
+import { Logger } from './components/Logger'
+
 import * as math from 'mathjs'
-import { getDefaultNormalizer } from '@testing-library/react'
 
 class App extends Component {
 	constructor(props) {
 		super(props)
-		this.state = { input: '', inputType: 'empty', COLength: 0, openParenths: 0 }
+		this.state = {
+			input: '',
+			inputType: 'empty',
+			COLength: 0,
+			openParenths: 0,
+			onAnswer: 1,
+		}
 	}
 
-	appendInput = (val) => {
+	appendInput = (val, type) => {
 		this.setState({
 			input: this.state.input + val,
-			COLength: this.state.COLength + 1,
+			COLength: this.state.COLength + val.length,
+			inputType: type,
 		})
 	}
-	updateInputType = (type) => this.setState({ inputType: type })
-	clearCOLength = (inc = 0) => this.setState({ COLength: 0 + inc, openParenths: 0 })
-	setInput = (val) => this.setState({ input: val })
-  setParenths = (inc = 1) => {
-    this.setState({ openParenths: this.state.openParenths + inc, inputType: 'CO'} )}
+
+	updateInputType = type => this.setState({ inputType: type })
+
+	clearCOLength = (incr = 0) => this.setState({ COLength: 0 + incr })
+
+	setInput = (val, type) =>
+		this.setState({
+			input: val,
+			COLength: this.state.COLength + 1,
+			inputType: type,
+		})
+
+	setParenths = incr => {
+		this.setState({ openParenths: parseInt(this.state.openParenths) + incr })
+	}
+	
+	resetParenths = () => {
+		this.setState({ openParenths: 0 })
+	}
+
+	updateAnswer = (bool) => this.setState({ onAnswer: bool })
 
 	addToInput = (val) => {
-		console.log(this.state.COLength)
 		if (isNaN(val)) {
-      // break out later?
-      if (val === ')') { 
-        this.setParenths(-1)
-        switch (this.state.inputType) {
-          case 'decimal':
-            console.log('decimal')
-            break
-          case 'COFloat':
-            console.log('COFloat')
-            break
-          case 'CO':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'empty':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'minus':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'operator':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'answer':
-            this.setInput(val)
-            this.updateInputType('CO')
-            break
-          default:
-            console.log('error') }}
-			else if (val === '(') {
-        this.setParenths()
-        switch (this.state.inputType) {
-          case 'decimal':
-            console.log('decimal')
-            break
-          case 'COFloat':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'CO':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'empty':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'minus':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'operator':
-            this.appendInput(val)
-            this.updateInputType('CO')
-            break
-          case 'answer':
-            this.setInput(val)
-            this.updateInputType('CO')
-            break
-          default:
-            console.log('error')
-        }
-				this.setState({ openParenths: 'True' })
-			} else if (val === '.') {
-				switch (this.state.inputType) {
-					case 'decimal':
-						console.log('decimal')
-						break
-					case 'COFloat':
-						console.log('COFloat')
-						break
-					case 'CO':
-						this.appendInput(val)
-						this.updateInputType('COFloat')
-						break
-					case 'empty':
-						this.appendInput(val)
-						this.updateInputType('CO')
-						break
-					case 'minus':
-						this.appendInput(val)
-						this.updateInputType('decimal')
-						break
-					case 'operator':
-						this.appendInput(val)
-						this.updateInputType('decimal')
-						break
-					case 'answer':
-						this.setInput(val)
-						this.updateInputType('decimal')
-						break
-					default:
-						console.log('error')
-				}
-			} else if (val === '-') {
-				switch (this.state.inputType) {
-					case 'decimal':
-						console.log('minus')
-						break
-					case 'minus':
-						console.log('minus')
-						break
-					case 'COFloat':
-						console.log('COFloat')
-						this.appendInput(val)
-						this.updateInputType('minus')
-						this.clearCOLength(1)
-						break
-					case 'CO':
-						console.log('CO')
-						this.appendInput(val)
-						this.updateInputType('minus')
-						this.clearCOLength(1)
-						break
-					case 'empty':
-						console.log('empty')
-						this.appendInput(val)
-						this.updateInputType('minus')
-						this.clearCOLength(1)
-						break
-					case 'operator':
-						console.log('operator')
-						this.appendInput(val)
-						this.updateInputType('minus')
-						break
-					case 'answer':
-						this.appendInput(val)
-						this.updateInputType('operator')
-						break
-					default:
-						console.log('error')
-				}
-			} else {
-				switch (this.state.inputType) {
-					case 'empty':
-						console.log('empty')
-						break
-					case 'decimal':
-						console.log('decimal')
-						break
-					case 'COFloat':
-						console.log('COFloat')
-						this.appendInput(val)
-						this.updateInputType('operator')
-						this.clearCOLength(1)
-						break
-					case 'CO':
-						console.log('CO')
-						this.appendInput(val)
-						this.updateInputType('operator')
-						this.clearCOLength(1)
-						break
-					case 'minus':
-						console.log('minus')
-						let newinput = this.state.input.slice(
-							0,
-							this.state.input.length - 1
-						)
-						this.setState({ input: newinput + val })
-						this.clearCOLength(1)
-						break
-					case 'operator':
-						console.log('operator')
-						let newerinput = this.state.input.slice(
-							0,
-							this.state.input.length - 1
-						)
-						this.setState({ input: newerinput + val })
-						this.clearCOLength(1)
-						break
-					case 'answer':
-						this.appendInput(val)
-						this.updateInputType('operator')
-						this.clearCOLength(1)
-						break
-					default:
-						console.log('error')
-				}
+			// break out later?
+			switch (val) {
+				case ')':
+					if (
+						this.state.openParenths < 1 ||
+						this.state.inputType === 'openParenths' ||
+						this.state.inputType === 'minus'
+					) {
+						return
+					} else {
+						this.setParenths(-1)
+						this.appendInput(val, 'CO')
+					}
+					break
+				case '(':
+					switch (this.state.inputType) {
+						case 'decimal':
+							break
+						default:
+							this.setParenths(1)
+							this.appendInput(val, 'openParenths')
+							break
+					}
+					break
+				case '.':
+					switch (this.state.inputType) {
+						case 'COFloat':
+							break
+						case 'answer':
+							this.setInput(val, 'decimal')
+							break
+						case 'CO':
+							this.appendInput(val, 'COFloat')
+							break
+						case 'empty':
+							this.appendInput(val, 'CO')
+							break
+						default:
+							this.appendInput(val, 'decimal')
+							break
+					}
+					break
+				case '-':
+					switch (this.state.inputType) {
+						case 'decimal':
+							break
+						case 'minus':
+							break
+						case 'operator':
+							this.setInput(
+								this.state.input.slice(0, this.state.input.length - 1) + val,
+								'operator'
+							)
+							this.clearCOLength(1)
+							break
+						case 'answer':
+							this.appendInput(val, 'operator')
+							break
+						default:
+							this.appendInput(val, 'minus')
+							break
+					}
+					break
+				default:
+					if (
+						this.state.inputType === 'empty' ||
+						this.state.inputType === 'decimal' ||
+						this.state.inputType === 'openParenths'
+					) {
+						return
+					} else {
+						switch (this.state.inputType) {
+							case 'minus':
+								this.setInput(
+									this.state.input.slice(0, this.state.input.length - 1) + val,
+									'operator'
+								)
+								this.clearCOLength(1)
+								break
+							case 'operator':
+								this.setInput(
+									this.state.input.slice(0, this.state.input.length - 1) + val,
+									'operator'
+								)
+								this.clearCOLength(1)
+								break
+							default:
+								this.appendInput(val, 'operator')
+								this.clearCOLength(1)
+								break
+						}
+					}
 			}
 		} else {
 			switch (this.state.inputType) {
-				case 'decimal':
-					console.log('decimal')
-					this.appendInput(val)
-					this.updateInputType('CO')
+				case 'answer':
+					this.setInput(val, 'CO')
 					break
 				case 'COFloat':
-					console.log('COFloat')
-					this.appendInput(val)
-					this.updateInputType('COFloat')
+					this.appendInput(val, 'COFloat')
 					break
-				case 'CO':
-					console.log('CO')
-					this.appendInput(val)
-					this.updateInputType('CO')
-					break
-				case 'empty':
-					console.log('empty')
-					this.appendInput(val)
-					this.updateInputType('CO')
-					break
-				case 'minus':
-					console.log('minus')
-					this.appendInput(val)
-					this.updateInputType('CO')
-					break
-				case 'operator':
-					console.log('operator')
-					this.appendInput(val)
-					this.updateInputType('CO')
-					break
-				case 'answer':
-					this.setInput(val)
-					this.updateInputType('CO')
+				case 'decimal':
+					this.appendInput(val, 'COFloat')
 					break
 				default:
-					console.log('error')
+					this.appendInput(val, 'CO')
+					break
 			}
 		}
-		console.log(this.state.inputType)
-    console.log(this.state.openParenths+'openParenths')
+		this.updateAnswer(0)
 	}
-  
+
 	handleEqual = () => {
-    const closeParenths = (num) => {
-      let i
-      for (i; i < num; i++) {
-        return
-    } return ')'*i }
-
-   
-    if (this.state.openParenths < 0) {return
-    }  else   {
-			if(this.state.openParenths > 0 ) { this.setState({
-        this: this.state.inputType + closeParenths(this.state.openParenths),
-			})}
-      switch (this.state.inputType) {
-				case 'decimal':
-					console.log('decimal')
-					break
-				case 'minus':
-          console.log('minus')
-					break
-          case 'operator':
-					let newinput = this.state.input.slice(0, this.state.input.length - 1)
-					this.setState({ input: newinput })
-          this.updateInputType('answer')
-					break
-          default:
-            this.setState({
-              input: '' + math.evaluate(this.state.input),
-            })
-            this.updateInputType('answer')
-            this.clearCOLength()
-          }
-        }
-        console.log(this.state.inputType)
-	}
-
-	handleClear = () => {
-		if (this.state.COLength === 1) {
-			this.setState({
-				input: this.state.input.slice(0, this.state.input.length - 1),
-			})
-		} else if (this.state.COLength > 1) {
+		if (
+			this.state.inputType === 'decimal' ||
+			this.state.inputType === 'minus' ||
+			this.state.inputType === 'openParenths'
+		) {
+			return
+		} else {
 			switch (this.state.inputType) {
-				case 'answer':
-					this.setInput('')
-					this.updateInputType('answer')
-					this.clearCOLength()
-					break
-				case 'decimal':
-					console.log('decimal')
-					this.setState({
-						input: this.state.input.slice(
-							0,
-							this.state.input.length - this.state.COLength
-						),
-					})
-					this.updateInputType('empty')
-					this.clearCOLength()
-					break
-				case 'COFloat':
-					console.log('COFloat')
-					this.setState({
-						input: this.state.input.slice(
-							0,
-							this.state.input.length - this.state.COLength
-						),
-					})
-					this.updateInputType('empty')
-					this.clearCOLength()
-					break
-				case 'CO':
-					console.log('CO')
-					this.setState({
-						input: this.state.input.slice(
-							0,
-							this.state.input.length - this.state.COLength
-						),
-					})
-					this.updateInputType('empty')
-					this.clearCOLength()
-					break
-				case 'minus':
-					console.log('minus')
-					this.setState({
-						input: this.state.input.slice(
-							0,
-							this.state.input.length - this.state.COLength
-						),
-					})
-					this.updateInputType('empty')
-					this.clearCOLength()
-					break
 				case 'operator':
-					console.log('operator')
 					this.setState({
 						input: this.state.input.slice(0, this.state.input.length - 1),
 					})
-					this.updateInputType('empty')
+					this.updateInputType('answer')
 					break
 				default:
-					console.log('error')
+					let answer
+					if (this.state.openParenths >= 0) {
+						answer = this.state.input + ')'.repeat(this.state.openParenths)
+					} else {
+						answer = '('.repeat(this.state.openParenths) + this.state.input
+					}
+					this.setState({
+						input: math.evaluate(answer).toPrecision(),
+					})
+					this.updateInputType('answer')
+					this.clearCOLength()
 			}
-		} else {
-			this.setInput('')
+			this.updateAnswer(1)
+			this.resetParenths()
 		}
-		// if (this.state.onAnswer) {
-		//   this.clearInput()
-		//   this.clearCO()
-		// } else if (isNaN(this.state.input[this.state.input.length - 1])) {
+	}
 
-		// } else if (this.state.currentOperand) {
-		//   this.setState({input: this.state.input.slice(	0, this.state.input.length - this.state.COLength),
-		//   })
-		//   this.clearCO()
-		// } else {
-		//   this.clearCO()
-		//   this.clearInput()
-		// }
-		// if (this.state.COLength === 0) { this.setState({ inputType: 'empty'} )}
+	handleClear = () => {
+		switch (this.state.onAnswer) {
+			case 1:
+				this.setInput('', 'empty')
+				this.clearCOLength()
+				break
+			default:
+				this.setState({
+					input: this.state.input.slice(
+						0,
+						this.state.input.length - this.state.COLength
+					),
+				})
+				this.updateInputType('answer')
+				this.clearCOLength()
+				break
+		}
+
+		this.updateAnswer(1)
+		this.resetParenths()
 	}
 
 	render() {
 		return (
 			<div className='app'>
 				<div className='calc-wrapper'>
+					<Logger
+						COLength={this.state.COLength}
+						onAnswer={this.state.onAnswer}
+						openParenths={this.state.openParenths}
+						inputType={this.state.inputType}></Logger>
 					<Input input={this.state.input}></Input>
 					<div className='row'>
 						<Button handleClick={this.addToInput}>7</Button>
@@ -398,7 +246,7 @@ class App extends Component {
 						<Button handleClick={this.addToInput}>+</Button>
 					</div>
 					<div className='row'>
-						<Button handleClick={this.addToInput}>.</Button>
+						<Button handleClick={this.addToInput}>.(</Button>
 						<Button handleClick={this.addToInput}>0</Button>
 						<Button handleClick={() => this.handleEqual()}>=</Button>
 						<Button handleClick={this.addToInput}>-</Button>
