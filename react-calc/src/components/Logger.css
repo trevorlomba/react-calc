@@ -2,13 +2,13 @@
     display: flex;
     justify-content:start;
     align-items: center;
-    height: 1em;
+    height:2em;
     padding: 1em 1em;
-    font-weight: lighter;
-    font-size: 1em;
-    background-color: #1f1b26;
+    font-weight: bolder;
+    font-size: .7em;
+    background-color: #190f2b;
     color: #08daff;
     /* outline: 2px solid #9756bd; */
-    overflow: scroll;
-    overflow-x: auto;
+    /* overflow: scroll;
+    overflow-x: auto; */
 }
