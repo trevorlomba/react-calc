@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "mathjs": "^10.1.1",
+    "react-scripts": "^5.0.0",
+    "react-state": "^2.2.2",
+    "yarn": "^1.22.17"
+  }
+}
