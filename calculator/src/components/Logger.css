@@ -1,0 +1,14 @@
+.logger {
+    display: flex;
+    justify-content:start;
+    align-items: center;
+    height:2em;
+    padding: 1em 1em;
+    font-weight: bolder;
+    font-size: .7em;
+    background-color: #190f2b;
+    color: #08daff;
+    /* outline: 2px solid #9756bd; */
+    /* overflow: scroll;
+    overflow-x: auto; */
+}
