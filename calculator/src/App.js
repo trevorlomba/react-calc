@@ -11,13 +11,13 @@ class App extends Component {
 		super(props)
 		this.state = {
 			input: '',
-			inputType: 'empty',
+			preValType: 'empty',
 			COLength: 0,
 			openParenths: 0,
 		}
 	}
 
-	preVal = ''
+	
 	decimal = {
 		test: ['test', false, 1],
 		COFloat: ['break'],
@@ -110,104 +110,67 @@ class App extends Component {
 		minus: ['break', false],
 		openParenths: ['answer', true],
 	}
-	
 
-	appendInput = (val, type, set = false, slice = false, parenths = 0) => {
+	input = {
+		')': this.closedParenths,
+		'(': this.openedParenths,
+		'.': this.decimal,
+		'-': this.minus,
+		'NaN': this.operator,
+		'int': this.CO,
+	}
 
-		if (type[this.state.inputType][0] === 'break') { return } else {
+	preVal = ''
+
+	updateInput = (val, type, set = false, slice = false, parenths = 0) => {
+
+		if (type[this.state.preValType][0] === 'break') { return } else {
 			this.preVal = val
 			let openParenths = this.state.openParenths
 			let COLength = this.state.COLength
 			let input = this.state.input
-			
-			if (type[this.state.inputType][1]) {
+
+			if (type[this.state.preValType][1]) {
 				input = ''
 				openParenths = 0
 				COLength = -val.length
-			} 
-			if (type.parenths) {
-				openParenths = parseInt(this.state.openParenths) + type.parenths 
 			}
-			console.log(type)
-			console.log(type[this.state.inputType][2])
-			if (type[this.state.inputType][2]) {
-				let slice = type[this.state.inputType][2]
-				if (slice === 'COL') { slice = COLength } else if (slice === 'preVal') {slice = this.preVal.length}
+			if (type.parenths) {
+				openParenths = parseInt(this.state.openParenths) + type.parenths
+			}
+			if (type[this.state.preValType][2]) {
+				let slice = type[this.state.preValType][2]
+				if (slice === 'COL') { slice = COLength } else if (slice === 'preVal') { slice = this.preVal.length }
 				input = input.slice(0, input.length - slice)
-				console.log(input)
 				COLength = COLength - slice
-			
-			if (type.COLength) {
-				console.log(this.COLengthState)
-				this.COLengthState = type.COLength
-				console.log(this.COLengthState)
-			}}
-			this.setState({ 
+
+				if (type.COLength) {
+					this.COLengthState = type.COLength
+				}
+			}
+			this.setState({
 				input: input + val,
 				COLength: COLength + val.length,
-				inputType: type[this.state.inputType][0],
+				preValType: type[this.state.preValType][0],
 				openParenths: openParenths
 			})
-			this.setState({
-				
-			}) }
-		
+		}
 	}
 
-
 	addToInput = (val) => {
-		if (isNaN(val)) {
-			switch (val) {
-				case ')':
-					if (this.state.openParenths < 1) {
-						return
-					} else {
-						this.appendInput(
-							val,
-							this.closedParenths
-						)
-					}
-					break
-				case '(':
-
-
-					this.appendInput(
-						val,
-						this.openedParenths
-					)
-					break
-
-				case '.':
-					this.appendInput(val, this.decimal)
-					break
-				case '-':
-					this.appendInput(val, this.minus)
-					break
-
-				default:
-					this.appendInput(val, this.operator)
-					break
-
-			}
-
-
-		} else {
-			switch (this.state.inputType) {
-				case 'answer':
-					this.appendInput(val, this.CO)
-					break
-				default:
-					this.appendInput(val, this.CO)
-					break
-			}
-		}
-		
+		if (/[().-]/.test(val)) {
+			
+			this.updateInput(val, this.input[val])
+		} else if (isNaN(val)) { 
+			this.updateInput(val, this.input.NaN) 
+		} else { 
+			this.updateInput(val, this.input.int) }
 	}
 
 	handleEqual = () => {
-		switch (this.state.inputType) {
+		switch (this.state.preValType) {
 			case 'operator':
-				this.appendInput('', this.equals)
+				this.updateInput('', this.equals)
 				break
 			default:
 				let answer
@@ -216,7 +179,7 @@ class App extends Component {
 				} else {
 					answer = '('.repeat(this.state.openParenths) + this.state.input
 				}
-				this.appendInput(
+				this.updateInput(
 					math.evaluate(answer).toPrecision(5),
 					this.equals
 				)
@@ -224,7 +187,7 @@ class App extends Component {
 	}
 
 	handleClear = () => {
-		this.appendInput('', this.clear)
+		this.updateInput('', this.clear)
 	}
 
 	render() {
@@ -234,7 +197,7 @@ class App extends Component {
 					<Logger
 						COLength={this.state.COLength}
 						openParenths={this.state.openParenths}
-						inputType={this.state.inputType}></Logger>
+						preValType={this.state.preValType}></Logger>
 					<Input input={this.state.input}></Input>
 					<div className='row'>
 						<Button handleClick={this.addToInput}>7</Button>
