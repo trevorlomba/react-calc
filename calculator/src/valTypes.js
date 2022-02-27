@@ -16,7 +16,7 @@ export const closedParenths = {
     answer: ['CO'],
     CO: ['CO'],
     decimal: ['CO'],
-    empty: ['CO'],
+    empty: ['answer'],
     operator: ['CO'],
     minus: ['break'],
     openParenths: ['break'],
@@ -28,7 +28,7 @@ export const minus = {
     CO: ['minus'],
     empty: ['minus'],
     decimal: ['break'],
-    operator: ['operator', false, 'preVal'],
+    operator: ['operator', false, 'previousVal'],
     minus: ['break'],
     openParenths: ['minus'],
 }
@@ -39,8 +39,8 @@ export const operator = {
     CO: ['operator'],
     empty: ['break'],
     decimal: ['break'],
-    operator: ['operator', false, 'preVal'],
-    minus: ['operator', false, 'preVal'],
+    operator: ['operator', false, 'previousVal'],
+    minus: ['operator', false, 'previousVal'],
     openParenths: ['break'],
 }
 
@@ -58,7 +58,7 @@ export const CO = {
 export const openedParenths = {
     parenths: 1,
     COFloat: ['openParenths'],
-    answer: ['openParenths', true],
+    answer: ['openParenths'],
     CO: ['openParenths'],
     empty: ['openParenths'],
     decimal: ['break'],
@@ -69,25 +69,25 @@ export const openedParenths = {
 
 export const equals = {
     doMath: 1,
-    COLength: 0,
     COFloat: ['answer', true],
-    answer: ['break', true],
+    answer: ['break'],
     CO: ['answer', true],
-    empty: ['answer', true],
+    empty: ['empty', true],
     decimal: ['break', true],
-    operator: ['answer', false, 'preVal'],
-    minus: ['break', true],
+    operator: ['answer', false, 'previousVal'],
+    minus: ['break'],
     openParenths: ['break', true],
 }
 
 
 export const clear = {
     COFloat: ['answer', false, 'COL'],
-    answer: ['answer', true],
+    clear: ['answer', true],
     CO: ['answer', false, 'COL'],
     empty: ['answer', false, 'COL'],
-    decimal: ['break', false, 'COL'],
+    decimal: ['answer', false, 'COL'],
     operator: ['answer', false, 'COL'],
-    minus: ['break', false],
+    minus: ['answer', false],
     openParenths: ['answer', true],
+    answer: ['empty', true],
 }
