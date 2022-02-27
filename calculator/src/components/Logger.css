@@ -5,10 +5,14 @@
     height:2em;
     padding: 1em 1em;
     font-weight: bolder;
-    font-size: .7em;
+    font-size: .55em;
     background-color: #190f2b;
-    color: #08daff;
+    color: #089cff;
     /* outline: 2px solid #9756bd; */
-    /* overflow: scroll;
-    overflow-x: auto; */
+    overflow: scroll;
+    overflow-x: auto;
+}
+
+.label {
+    font-weight: lighter;
 }
