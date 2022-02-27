@@ -4,7 +4,7 @@ import { Button } from './components/Button'
 import { Output } from './components/Output'
 import { ClearButton } from './components/ClearButton'
 import { Logger } from './components/Logger'
-import { decimal, minus, openedParenths, closedParenths, CO, operator, clear, equals  } from './valTypes'
+import { decimal, minus, openedParenths, closedParenths, CO, operator, clear, equals, expression  } from './valTypes'
 import * as math from 'mathjs'
 
 
@@ -28,13 +28,16 @@ class App extends Component {
 		'-': minus,
 		'NaN': operator,
 		'int': CO,
+		'exp': expression
 	}
 
 	previousVal = ''
 
 	
 	addToOutput = (val) => { // evaluates input value and calls updateOutput function accordingly
-		/[().-]/.test(val) ? this.updateOutput(val, this.input[val])
+		/[).-]/.test(val) ? this.updateOutput(val, this.input[val])
+		// :/[a-zA-Z]/.test(val) ? this.updateOutput(val, this.input['exp'])
+		:/[(]/.test(val) ? this.updateOutput(val, this.input['('])
 		: isNaN(val) ? this.updateOutput(val, this.input.NaN) 
 		: this.updateOutput(val, this.input.int) 
 	}
@@ -43,8 +46,7 @@ class App extends Component {
 	updateOutput = (val, valType) => {
 
 		if (valType[this.state.previousValType][0] === 'break' || (valType.parenths + this.state.openParenths < 0)) { return } else { // if (value for  key [previousValType] in the valTypes object has flag to break function) OR (there are no open parenths and a closed parenths is passed), return. else:
-			let openParenths = this.state.openParenths + /[(]/.test(val)*1 
-			- (/[)]/.test(val)*1)
+			let openParenths = this.state.openParenths
 			let operand = this.state.operand
 			let output = this.state.output
 
@@ -64,8 +66,9 @@ class App extends Component {
 				operand = operand.slice(0, operand.length - slice)
 
 			}
+			openParenths = openParenths + /[(]/.test(val) * 1 - (/[)]/.test(val) * 1)
 
-			if (valType.doMath) { // if valType object has flag to evaluate output as expression
+			if (valType[this.state.previousValType][3]) { // if valType object has flag to evaluate output as expression
 				let expression = this.state.output + ')'.repeat(this.state.openParenths) // close any open parenthesis before evaluating
 				let answer = math.evaluate(expression).toPrecision()
 				this.setState({
@@ -120,12 +123,24 @@ class App extends Component {
 					</div>
 					<div className='row'>
 						<Button handleClick={this.addToOutput}>(</Button>
+							<Button handleClick={this.addToOutput}>)</Button>
+						<Button handleClick={this.addToOutput}>%</Button>
+						<Button handleClick={this.addToOutput}>^</Button>
+						</div>
+					<div className='row'>
+						<Button handleClick={this.addToOutput}>sin(</Button>
+						<Button handleClick={this.addToOutput}>tan(</Button>
+						<Button handleClick={this.addToOutput}>cos(</Button>
+						<Button handleClick={this.addToOutput}>sqrt(</Button>
+						<Button handleClick={this.addToOutput}>exp(</Button>
+						<Button handleClick={this.addToOutput}>log(</Button>
+					</div>
+					<div className='row'>
+						{/* <Button handleClick={this.addToOutput}>1/x</Button> */}
+					</div>
 						<ClearButton handleClick={() => this.updateOutput('', clear)}>
 							Clear
 						</ClearButton>
-						<Button handleClick={this.addToOutput}>)</Button>
-						<Button handleClick={this.addToOutput}>sin(</Button>
-					</div>
 				</div>
 			</div>
 		)

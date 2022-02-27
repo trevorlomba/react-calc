@@ -13,7 +13,7 @@ export const decimal = {
 export const closedParenths = {
     parenths: -1,
     COFloat: ['CO'],
-    answer: ['CO'],
+    answer: ['break'],
     CO: ['CO'],
     decimal: ['CO'],
     empty: ['answer'],
@@ -58,7 +58,7 @@ export const CO = {
 export const openedParenths = {
     parenths: 1,
     COFloat: ['openParenths'],
-    answer: ['openParenths'],
+    answer: ['openParenths', true],
     CO: ['openParenths'],
     empty: ['openParenths'],
     decimal: ['break'],
@@ -68,15 +68,14 @@ export const openedParenths = {
 }
 
 export const equals = {
-    doMath: 1,
-    COFloat: ['answer', true],
+    COFloat: ['answer', true, false, true],
     answer: ['break'],
-    CO: ['answer', true],
-    empty: ['empty', true],
-    decimal: ['break', true],
-    operator: ['answer', false, 'previousVal'],
+    CO: ['answer', true, false, true],
+    empty: ['empty', true, false, true],
+    decimal: ['break'],
+    operator: ['answer', false, 'previousVal', true],
     minus: ['break'],
-    openParenths: ['break', true],
+    openParenths: ['break'],
 }
 
 
@@ -90,4 +89,18 @@ export const clear = {
     minus: ['answer', false],
     openParenths: ['answer', true],
     answer: ['empty', true],
+}
+
+
+
+export const expression = {
+    parenths: 1,
+    COFloat: ['expression'],
+    answer: ['expression', true, false, true],
+    CO: ['expression'],
+    empty: ['expression'],
+    decimal: ['break'],
+    operator: ['expression'],
+    minus: ['expression'],
+    openParenths: ['openParenths'],
 }
