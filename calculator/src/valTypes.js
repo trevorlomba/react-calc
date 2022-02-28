@@ -80,12 +80,12 @@ export const equals = {
 
 
 export const clear = {
-    COFloat: ['answer', false, 'COL'],
+    COFloat: ['answer', false, 'operand'],
     clear: ['answer', true],
-    CO: ['answer', false, 'COL'],
-    empty: ['answer', false, 'COL'],
-    decimal: ['answer', false, 'COL'],
-    operator: ['answer', false, 'COL'],
+    CO: ['answer', false, 'operand'],
+    empty: ['answer', false, 'operand'],
+    decimal: ['answer', false, 'operand'],
+    operator: ['answer', false, 'operand'],
     minus: ['answer', false],
     openParenths: ['answer', true],
     answer: ['empty', true],

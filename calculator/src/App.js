@@ -36,10 +36,10 @@ class App extends Component {
 
 	addToOutput = (val) => { // evaluates input value and calls updateOutput function accordingly
 		/[).-]/.test(val) ? this.updateOutput(val, this.input[val])
-			// :/[a-zA-Z]/.test(val) ? this.updateOutput(val, this.input['exp'])
-			: /[(]/.test(val) ? this.updateOutput(val, this.input['('])
-				: isNaN(val) ? this.updateOutput(val, this.input.NaN)
-					: this.updateOutput(val, this.input.int)
+		// :/[a-zA-Z]/.test(val) ? this.updateOutput(val, this.input['exp'])
+		: /[(]/.test(val) ? this.updateOutput(val, this.input['('])
+		: isNaN(val) ? this.updateOutput(val, this.input.NaN)
+		: this.updateOutput(val, this.input.int)
 	}
 
 
@@ -59,7 +59,7 @@ class App extends Component {
 			if (valType[this.state.previousValType][2]) { // if key value pair in valTypes features flag to slice and replace end of output
 
 				let slice // set slice length depending on flag in key value pair
-				valType[this.state.previousValType][2] === 'COL' ? slice = operand.length
+				valType[this.state.previousValType][2] === 'operand' ? slice = operand.length
 					: valType[this.state.previousValType][2] === 'previousVal' ? slice = this.previousVal.length
 						: valType[this.state.previousValType][2] = valType[this.state.previousValType][2]
 
