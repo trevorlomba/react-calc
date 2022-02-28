@@ -4,7 +4,7 @@ import { Button } from './components/Button'
 import { Output } from './components/Output'
 import { ClearButton } from './components/ClearButton'
 import { Logger } from './components/Logger'
-import { decimal, minus, openedParenths, closedParenths, CO, operator, clear, equals, expression  } from './valTypes'
+import { decimal, minus, openedParenths, closedParenths, CO, operator, clear, equals, expression } from './valTypes'
 import * as math from 'mathjs'
 
 
@@ -33,16 +33,16 @@ class App extends Component {
 
 	previousVal = ''
 
-	
+
 	addToOutput = (val) => { // evaluates input value and calls updateOutput function accordingly
 		/[).-]/.test(val) ? this.updateOutput(val, this.input[val])
-		// :/[a-zA-Z]/.test(val) ? this.updateOutput(val, this.input['exp'])
-		:/[(]/.test(val) ? this.updateOutput(val, this.input['('])
-		: isNaN(val) ? this.updateOutput(val, this.input.NaN) 
-		: this.updateOutput(val, this.input.int) 
+			// :/[a-zA-Z]/.test(val) ? this.updateOutput(val, this.input['exp'])
+			: /[(]/.test(val) ? this.updateOutput(val, this.input['('])
+				: isNaN(val) ? this.updateOutput(val, this.input.NaN)
+					: this.updateOutput(val, this.input.int)
 	}
 
-	
+
 	updateOutput = (val, valType) => {
 
 		if (valType[this.state.previousValType][0] === 'break' || (valType.parenths + this.state.openParenths < 0)) { return } else { // if (value for  key [previousValType] in the valTypes object has flag to break function) OR (there are no open parenths and a closed parenths is passed), return. else:
@@ -53,20 +53,24 @@ class App extends Component {
 			if (valType[this.state.previousValType][1]) { // if key value pair in valTypes has flag to reset output
 				output = ''
 				openParenths = 0
-				operand = '' 
+				operand = ''
 			}
+
 			if (valType[this.state.previousValType][2]) { // if key value pair in valTypes features flag to slice and replace end of output
-				
+
 				let slice // set slice length depending on flag in key value pair
-				valType[this.state.previousValType][2] === 'COL' ? slice = operand.length 
-				: valType[this.state.previousValType][2] === 'previousVal' ? slice = this.previousVal.length
-				: valType[this.state.previousValType][2] = valType[this.state.previousValType][2]
-				
+				valType[this.state.previousValType][2] === 'COL' ? slice = operand.length
+					: valType[this.state.previousValType][2] === 'previousVal' ? slice = this.previousVal.length
+						: valType[this.state.previousValType][2] = valType[this.state.previousValType][2]
+
 				output = output.slice(0, output.length - slice)
 				operand = operand.slice(0, operand.length - slice)
 
 			}
-			openParenths = openParenths + /[(]/.test(val) * 1 - (/[)]/.test(val) * 1)
+
+			if (/[()]/.test(val)) { // if val includes parenths
+				openParenths = openParenths + /[(]/.test(val) * 1 - (/[)]/.test(val) * 1)
+			}
 
 			if (valType[this.state.previousValType][3]) { // if valType object has flag to evaluate output as expression
 				let expression = this.state.output + ')'.repeat(this.state.openParenths) // close any open parenthesis before evaluating
@@ -77,14 +81,16 @@ class App extends Component {
 					operand: '',
 					openParenths: openParenths
 				})
-			 } else { // else:
-				 this.setState({
-					 output: output + val,
-					 previousValType: valType[this.state.previousValType][0],
-					 operand: operand + val,
-					 openParenths: openParenths
-				 })}
-			
+
+			} else { // else:
+				this.setState({
+					output: output + val,
+					previousValType: valType[this.state.previousValType][0],
+					operand: operand + val,
+					openParenths: openParenths
+				})
+			}
+
 			this.previousVal = val
 		}
 	}
@@ -123,10 +129,10 @@ class App extends Component {
 					</div>
 					<div className='row'>
 						<Button handleClick={this.addToOutput}>(</Button>
-							<Button handleClick={this.addToOutput}>)</Button>
+						<Button handleClick={this.addToOutput}>)</Button>
 						<Button handleClick={this.addToOutput}>%</Button>
 						<Button handleClick={this.addToOutput}>^</Button>
-						</div>
+					</div>
 					<div className='row'>
 						<Button handleClick={this.addToOutput}>sin(</Button>
 						<Button handleClick={this.addToOutput}>tan(</Button>
@@ -138,9 +144,9 @@ class App extends Component {
 					<div className='row'>
 						{/* <Button handleClick={this.addToOutput}>1/x</Button> */}
 					</div>
-						<ClearButton handleClick={() => this.updateOutput('', clear)}>
-							Clear
-						</ClearButton>
+					<ClearButton handleClick={() => this.updateOutput('', clear)}>
+						Clear
+					</ClearButton>
 				</div>
 			</div>
 		)
