@@ -4,9 +4,25 @@
     align-items: center;
     flex: 1;
     height: 2em;
-    font-weight: normal;
+    font-weight: lighter;
     font-size: 1.4em;
-    background-color: #ffffff;
-    color: #9756bd;
-    outline: 1px solid #888888;
+    background-color: #d6d9e7;
+    color: #230553;
+    outline: .1rem solid #8C7284;
+    border-radius: 0rem 0em 1rem 1rem;
+    margin: .2em 0em 0em 0em;
+    box-shadow: .1rem .1rem .5rem #230553;
+    
+}
+
+.clear-btn:hover {
+    background-color: #DEABC5;
+    outline: .1rem solid #8C7284;
+    color: #230553;
+    transition: 200ms;
+}
+
+.clear-btn:active {
+    /* background-color: #6EA4BF; */
+    box-shadow: .05rem .05rem .5rem #331832;
 }

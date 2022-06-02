@@ -6,9 +6,14 @@
     padding: 2em 1em;
     font-weight: bold;
     font-size: 1.4em;
-    background-color: #1f1b26;
+    background-color: #331832;
     color: #ffffff;
-    outline: 2px solid #9756bd;
-    overflow: scroll;
-    overflow-x: auto;
+    /* outline: .1rem solid #8C7284; */
+    /* overflow: auto; */
+    overflow-x: scroll;
+    overflow-y: visible;
+    margin: 0em 0em .5em 0em;
+    outline: .1rem solid #DEABC5;
+        /* box-shadow: .1rem .1rem 1rem #DEABC5; */
+        border-radius: 1rem;
 }

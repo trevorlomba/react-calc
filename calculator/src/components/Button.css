@@ -6,13 +6,37 @@
     align-items: center;
     justify-items: center;
     font-weight: lighter;
-    font-size: 1.4em;
+    font-size: 1.1em;
     background-color: #d6d9e7;
     color: #230553;
-    outline: 1px solid #888888;
+    outline: .1rem solid #DEABC5;
+    box-shadow: .1rem .1rem .5rem #230553;
+    border-radius: 1.5em;
+    margin: .3em .2em;
+    padding: 1em 0em;
+}
+
+.button-wrapper:hover {
+    background-color: #DEABC5;
+    outline: .1rem solid #8C7284;
+    transition: 200ms;
+}
+
+
+
+.button-wrapper:active {
+    /* background-color: #6EA4BF; */
+    box-shadow: .05rem .05rem .5rem #331832;
 }
 
 .operator {
-    background-color: #9756bd;
+    background-color: #331832;
     color: #ffffff;
+}
+
+.operator:hover {
+    background-color: #DEABC5;
+    outline: .1rem solid #8C7284;
+    color: #230553;
+    transition: 200ms;
 }
