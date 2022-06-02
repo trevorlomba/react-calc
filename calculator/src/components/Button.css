@@ -5,7 +5,7 @@
     align-content: center;
     align-items: center;
     justify-items: center;
-    font-weight: lighter;
+    font-weight: normal;
     font-size: 1.1em;
     background-color: #d6d9e7;
     color: #230553;
@@ -31,6 +31,8 @@
 
 .operator {
     background-color: #331832;
+    font-weight: lighter;
+    outline: .0rem solid #DEABC5;
     color: #ffffff;
 }
 
