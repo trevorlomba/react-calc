@@ -7,6 +7,13 @@
   background-color: #FFE4FA;
 }
 
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .calc-wrapper {
   width: 50%;
   /* height: 70%;
