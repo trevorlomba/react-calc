@@ -11,7 +11,7 @@
     outline: .1rem solid #8C7284;
     border-radius: 0rem 0em 1rem 1rem;
     margin: .2em 0em 0em 0em;
-    box-shadow: .1rem .1rem .5rem #230553;
+    box-shadow: -.1rem .15rem .2rem #230553;
     
 }
 
@@ -24,5 +24,5 @@
 
 .clear-btn:active {
     /* background-color: #6EA4BF; */
-    box-shadow: .05rem .05rem .5rem #331832;
+    box-shadow: -.05rem .05rem .2rem #331832;
 }
