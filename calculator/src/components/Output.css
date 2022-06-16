@@ -10,7 +10,7 @@
     color: #ffffff;
     /* outline: .1rem solid #8C7284; */
     /* overflow: auto; */
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     margin: 0em 0em .5em 0em;
     outline: .2rem groove #DEABC5 ;
