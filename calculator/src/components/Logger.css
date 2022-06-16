@@ -3,14 +3,14 @@
     justify-content:start;
     align-items: center;
     height:2em;
-    padding: 1em 1em;
+    padding: 1em 0em;
     font-weight: bolder;
     font-size: 1rem;
     background-color: #6EA4BF;
     color: #331832;
     /* outline: 2px solid #9756bd; */
     overflow: auto;
-    overflow-x: auto;
+    overflow-x:auto;
     border-radius: 1rem 1rem 0em 0em;
 }
 

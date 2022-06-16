@@ -16,8 +16,8 @@ body {
 }
 
 .calc-wrapper {
-  max-width: 50%;
-  min-width: 30%;
+  max-width: 22rem;
+  min-width: 22rem;
   /* min-width: 200px;
   min-height: 400px; */
   border-radius: 0em 2em 2em 2em;
