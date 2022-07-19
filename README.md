@@ -1,7 +1,7 @@
 # Scientific Calculator 
 #### by Trevor Lomba
 
-#### Quick Links
+### Quick Links
 * [frontend repo](https://trevorlomba.github.io/react-calc/)
 * [deployed app](https://github.com/trevorlomba/scientific-calc)
 
