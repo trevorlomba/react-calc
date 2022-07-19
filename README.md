@@ -1,4 +1,5 @@
-# Scientific Calculator by Trevor Lomba
+# Scientific Calculator 
+#### by Trevor Lomba
 
 ## Quick Links
 * [frontend repo](https://trevorlomba.github.io/react-calc/)
